@@ -14,7 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AppState()..initialize(),
+      create: (_) {
+        final appState = AppState();
+        // Initialize asynchronously without blocking UI
+        appState.initialize().catchError((e) {
+          debugPrint('Initialization error: $e');
+        });
+        return appState;
+      },
       child: MaterialApp(
         title: 'Egyptian Banking',
         debugShowCheckedModeBanner: false,
@@ -114,7 +121,7 @@ class MyApp extends StatelessWidget {
                 ),
               );
             }
-            
+
             return appState.isAuthenticated
                 ? const HomeScreen()
                 : const LoginScreen();
