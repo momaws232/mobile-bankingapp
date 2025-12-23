@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=D:\Flutter\flutter"
-export "FLUTTER_APPLICATION_PATH=D:\Term 5\BaNkingApp"
+export "FLUTTER_ROOT=C:\Flutter SDK archive\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Users\Asser\Desktop\mobile specification final proj\mobile-bankingapp"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"

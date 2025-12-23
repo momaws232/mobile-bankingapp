@@ -26,15 +26,16 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.bankingapp.banking_app"
-    compileSdk 34
+    compileSdk 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '21'
     }
 
     sourceSets {
@@ -44,7 +45,7 @@ android {
     defaultConfig {
         applicationId "com.bankingapp.banking_app"
         minSdkVersion flutter.minSdkVersion
-        targetSdk 34
+        targetSdk 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

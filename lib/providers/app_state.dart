@@ -49,9 +49,22 @@ class AppState extends ChangeNotifier {
   Future<void> initialize() async {
     _setLoading(true);
     try {
-      await _checkAuthentication();
+      // Add timeout to prevent hanging on slow emulators
+      await _checkAuthentication().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          // If timeout, just mark as not authenticated
+          _isAuthenticated = false;
+          notifyListeners();
+        },
+      );
       if (_isAuthenticated) {
-        await _loadData();
+        await _loadData().timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            // If data loading times out, continue anyway
+          },
+        );
       }
     } catch (e) {
       _setError('Failed to initialize: $e');
