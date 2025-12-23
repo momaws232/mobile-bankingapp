@@ -56,6 +56,32 @@ class Account {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  // Firestore serialization
+  Map<String, dynamic> toFirestore() {
+    return {
+      'id': id,
+      'name': name,
+      'balance': balance,
+      'currency': currency,
+      'type': type.toString().split('.').last,
+      'createdAt': createdAt.toIso8601String(),
+    };
+  }
+
+  factory Account.fromFirestore(dynamic doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Account(
+      id: doc.id,
+      name: data['name'] as String,
+      balance: (data['balance'] as num).toDouble(),
+      currency: data['currency'] as String? ?? 'USD',
+      type: AccountType.values.firstWhere(
+        (e) => e.toString().split('.').last == data['type'],
+      ),
+      createdAt: DateTime.parse(data['createdAt'] as String),
+    );
+  }
 }
 
 enum AccountType {

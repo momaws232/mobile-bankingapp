@@ -151,25 +151,79 @@ class ProfileScreen extends StatelessWidget {
                       icon: Icons.person_outline,
                       title: 'Edit Profile',
                       subtitle: 'Update your personal information',
-                      onTap: () {},
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Edit individual fields below'),
+                            backgroundColor: Color(0xFF00E676),
+                          ),
+                        );
+                      },
                     ),
                     _buildProfileOption(
                       icon: Icons.badge_outlined,
                       title: 'National ID',
                       subtitle: '299120112*****',
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Row(
+                              children: [
+                                Icon(Icons.lock, color: Color(0xFF00E676)),
+                                SizedBox(width: 12),
+                                Text('National ID'),
+                              ],
+                            ),
+                            content: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'National ID: 29912011234567',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Your National ID cannot be changed for security and legal reasons.',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                     _buildProfileOption(
                       icon: Icons.phone_outlined,
                       title: 'Phone Number',
                       subtitle: '+20 101 234 5678',
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const EditPhoneDialog(),
+                        );
+                      },
                     ),
                     _buildProfileOption(
                       icon: Icons.location_on_outlined,
                       title: 'Address',
                       subtitle: 'Cairo, Nasr City',
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => const EditAddressDialog(),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -287,6 +341,203 @@ class ProfileScreen extends StatelessWidget {
       ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
+    );
+  }
+}
+
+// Edit Phone Dialog
+class EditPhoneDialog extends StatefulWidget {
+  const EditPhoneDialog({super.key});
+
+  @override
+  State<EditPhoneDialog> createState() => _EditPhoneDialogState();
+}
+
+class _EditPhoneDialogState extends State<EditPhoneDialog> {
+  final _phoneController = TextEditingController(text: '+20 101 234 5678');
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Edit Phone Number'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _phoneController,
+            decoration: const InputDecoration(
+              labelText: 'Phone Number',
+              hintText: '+20 10X XXX XXXX',
+              prefixIcon: Icon(Icons.phone),
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.phone,
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Egyptian format: +20 10/11/12/15 followed by 8 digits',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            // Validate Egyptian phone number
+            final phone = _phoneController.text.replaceAll(' ', '');
+            if (phone.startsWith('+20') && phone.length >= 13) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Phone number updated!'),
+                  backgroundColor: Color(0xFF00E676),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Invalid Egyptian phone number'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00E676),
+          ),
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
+
+// Edit Address Dialog
+class EditAddressDialog extends StatefulWidget {
+  const EditAddressDialog({super.key});
+
+  @override
+  State<EditAddressDialog> createState() => _EditAddressDialogState();
+}
+
+class _EditAddressDialogState extends State<EditAddressDialog> {
+  String _governorate = 'Cairo';
+  final _cityController = TextEditingController(text: 'Nasr City');
+  final _streetController = TextEditingController(text: '123 Main Street');
+
+  final List<String> _governorates = [
+    'Cairo',
+    'Giza',
+    'Alexandria',
+    'Aswan',
+    'Asyut',
+    'Beheira',
+    'Beni Suef',
+    'Dakahlia',
+    'Damietta',
+    'Faiyum',
+    'Gharbia',
+    'Ismailia',
+    'Kafr El Sheikh',
+    'Luxor',
+    'Matruh',
+    'Minya',
+    'Monufia',
+    'New Valley',
+    'North Sinai',
+    'Port Said',
+    'Qalyubia',
+    'Qena',
+    'Red Sea',
+    'Sharqia',
+    'Sohag',
+    'South Sinai',
+    'Suez',
+  ];
+
+  @override
+  void dispose() {
+    _cityController.dispose();
+    _streetController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Edit Address'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownButtonFormField<String>(
+              value: _governorate,
+              decoration: const InputDecoration(
+                labelText: 'Governorate',
+                prefixIcon: Icon(Icons.location_city),
+                border: OutlineInputBorder(),
+              ),
+              items: _governorates.map((gov) {
+                return DropdownMenuItem(value: gov, child: Text(gov));
+              }).toList(),
+              onChanged: (value) => setState(() => _governorate = value!),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _cityController,
+              decoration: const InputDecoration(
+                labelText: 'City',
+                prefixIcon: Icon(Icons.location_on),
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _streetController,
+              decoration: const InputDecoration(
+                labelText: 'Street Address',
+                prefixIcon: Icon(Icons.home),
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 2,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Address updated!'),
+                backgroundColor: Color(0xFF00E676),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00E676),
+          ),
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }

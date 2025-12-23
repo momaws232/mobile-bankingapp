@@ -129,7 +129,76 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                       prefixIcon: const Icon(Icons.person_outline),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.qr_code_scanner, color: Color(0xFF00E676)),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Row(
+                                children: [
+                                  Icon(Icons.qr_code_scanner, color: Color(0xFF00E676)),
+                                  SizedBox(width: 12),
+                                  Text('Scan QR Code'),
+                                ],
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 200,
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.qr_code_scanner, size: 64, color: Colors.grey),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          'QR Scanner',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          'Point camera at QR code',
+                                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'Scan recipient\'s QR code to auto-fill their details',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('QR code scanned successfully!'),
+                                        backgroundColor: Color(0xFF00E676),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF00E676),
+                                  ),
+                                  child: const Text('Done'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),

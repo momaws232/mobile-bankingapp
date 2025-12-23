@@ -149,4 +149,53 @@ class BankCard {
       cardColor: cardColor ?? this.cardColor,
     );
   }
+
+  // Firestore serialization
+  Map<String, dynamic> toFirestore() {
+    return {
+      'id': id,
+      'accountId': accountId,
+      'cardNumber': cardNumber,
+      'cardHolderName': cardHolderName,
+      'type': type.toString().split('.').last,
+      'network': network.toString().split('.').last,
+      'expiryDate': expiryDate.toIso8601String(),
+      'status': status.toString().split('.').last,
+      'dailyLimit': dailyLimit,
+      'monthlyLimit': monthlyLimit,
+      'currentDailySpent': currentDailySpent,
+      'currentMonthlySpent': currentMonthlySpent,
+      'isVirtual': isVirtual,
+      'cardColor': cardColor.value,
+    };
+  }
+
+  factory BankCard.fromFirestore(dynamic doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return BankCard(
+      id: doc.id,
+      accountId: data['accountId'] as String,
+      cardNumber: data['cardNumber'] as String,
+      cardHolderName: data['cardHolderName'] as String,
+      type: CardType.values.firstWhere(
+        (e) => e.toString().split('.').last == data['type'],
+      ),
+      network: CardNetwork.values.firstWhere(
+        (e) => e.toString().split('.').last == data['network'],
+      ),
+      expiryDate: DateTime.parse(data['expiryDate'] as String),
+      status: CardStatus.values.firstWhere(
+        (e) => e.toString().split('.').last == data['status'],
+      ),
+      dailyLimit: (data['dailyLimit'] as num).toDouble(),
+      monthlyLimit: (data['monthlyLimit'] as num).toDouble(),
+      currentDailySpent: (data['currentDailySpent'] as num).toDouble(),
+      currentMonthlySpent: (data['currentMonthlySpent'] as num).toDouble(),
+      isVirtual: data['isVirtual'] as bool,
+      cardColor: Color(data['cardColor'] as int),
+    );
+  }
 }
+
+// Type alias for backward compatibility
+typedef CardModel = BankCard;

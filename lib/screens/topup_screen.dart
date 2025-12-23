@@ -67,7 +67,33 @@ class _TopUpScreenState extends State<TopUpScreen> {
                       prefixIcon: const Icon(Icons.phone),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.contacts, color: Color(0xFF00E676)),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Select Contact'),
+                              content: SizedBox(
+                                width: double.maxFinite,
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    _buildContactTile('Mom', '+20 101 234 5678', Icons.person),
+                                    _buildContactTile('Dad', '+20 100 987 6543', Icons.person),
+                                    _buildContactTile('Ahmed', '+20 111 222 3333', Icons.person),
+                                    _buildContactTile('Sara', '+20 122 333 4444', Icons.person),
+                                    _buildContactTile('Office', '+20 155 666 7777', Icons.business),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -237,6 +263,29 @@ class _TopUpScreenState extends State<TopUpScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildContactTile(String name, String phone, IconData icon) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: const Color(0xFF00E676).withOpacity(0.1),
+        child: Icon(icon, color: const Color(0xFF00E676)),
+      ),
+      title: Text(name),
+      subtitle: Text(phone),
+      onTap: () {
+        setState(() {
+          _phoneController.text = phone;
+        });
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Selected $name'),
+            backgroundColor: const Color(0xFF00E676),
+          ),
+        );
+      },
     );
   }
 }

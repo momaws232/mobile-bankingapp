@@ -68,6 +68,37 @@ class Transaction {
       accountId: accountId ?? this.accountId,
     );
   }
+
+  // Firestore serialization
+  Map<String, dynamic> toFirestore() {
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'category': category,
+      'date': date.toIso8601String(),
+      'type': type.toString().split('.').last,
+      'notes': notes,
+      'accountId': accountId,
+      'createdAt': DateTime.now().toIso8601String(),
+    };
+  }
+
+  factory Transaction.fromFirestore(dynamic doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Transaction(
+      id: doc.id,
+      title: data['title'] as String,
+      amount: (data['amount'] as num).toDouble(),
+      category: data['category'] as String,
+      date: DateTime.parse(data['date'] as String),
+      type: TransactionType.values.firstWhere(
+        (e) => e.toString().split('.').last == data['type'],
+      ),
+      notes: data['notes'] as String?,
+      accountId: data['accountId'] as String,
+    );
+  }
 }
 
 enum TransactionType {

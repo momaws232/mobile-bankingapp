@@ -28,6 +28,11 @@ class _AddCardScreenState extends State<AddCardScreen> {
       'color': const Color(0xFFEB001B),
       'icon': Icons.credit_card,
     },
+    'meeza': {
+      'name': 'Meeza',
+      'color': const Color(0xFFFF6F00), // Egyptian orange
+      'icon': Icons.credit_card,
+    },
     'paypal': {
       'name': 'PayPal',
       'color': const Color(0xFF003087),

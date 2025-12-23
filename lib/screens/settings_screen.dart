@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
+// import 'test_data_screen.dart'; // Temporarily disabled
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -85,7 +86,9 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ],
             ),
@@ -114,24 +117,56 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.lock_outline,
                   title: 'Change Password',
                   iconColor: const Color(0xFF00E676),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const ChangePasswordDialog(),
+                    );
+                  },
                 ),
                 _SettingsTile(
                   icon: Icons.fingerprint,
                   title: 'Biometric Login',
                   iconColor: const Color(0xFF00E676),
-                  trailing: Switch(
-                    value: true,
-                    onChanged: (value) {},
-                    activeColor: const Color(0xFF00E676),
-                  ),
+                  trailing: BiometricSwitch(),
                 ),
                 _SettingsTile(
                   icon: Icons.security,
                   title: 'Two-Factor Auth',
                   iconColor: const Color(0xFF00E676),
                   subtitle: 'Off',
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Two-Factor Authentication'),
+                        content: const Text(
+                          'Enable two-factor authentication for extra security. You\'ll need to enter a code from your phone each time you log in.',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('2FA enabled!'),
+                                  backgroundColor: Color(0xFF00E676),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF00E676),
+                            ),
+                            child: const Text('Enable'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -160,20 +195,71 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.notifications_outlined,
                   title: 'Notifications',
                   iconColor: const Color(0xFF00E676),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const NotificationsDialog(),
+                    );
+                  },
                 ),
                 _SettingsTile(
                   icon: Icons.language,
                   title: 'Language',
                   iconColor: const Color(0xFF00E676),
                   subtitle: 'English',
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => const LanguageDialog(),
+                    );
+                  },
                 ),
                 _SettingsTile(
                   icon: Icons.help_outline,
                   title: 'Help Center',
                   iconColor: const Color(0xFF00E676),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Help Center'),
+                        content: const SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Need help?',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 12),
+                              Text('📧 Email: support@bankingapp.com'),
+                              SizedBox(height: 8),
+                              Text('📞 Phone: +20 100 123 4567'),
+                              SizedBox(height: 8),
+                              Text('💬 Live Chat: Available 24/7'),
+                              SizedBox(height: 16),
+                              Text(
+                                'Common Questions:',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8),
+                              Text('• How to add a card?'),
+                              Text('• How to transfer money?'),
+                              Text('• How to freeze my card?'),
+                              Text('• How to change my password?'),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -202,13 +288,59 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.info_outline,
                   title: 'Privacy Policy',
                   iconColor: const Color(0xFF00E676),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Privacy Policy'),
+                        content: const SingleChildScrollView(
+                          child: Text(
+                            'Your privacy is important to us. We collect and use your personal information to provide banking services.\n\n'
+                            '• We protect your data with encryption\n'
+                            '• We never share your info without consent\n'
+                            '• You can request data deletion anytime\n\n'
+                            'Last updated: December 2024',
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 _SettingsTile(
                   icon: Icons.description_outlined,
                   title: 'Terms of Service',
                   iconColor: const Color(0xFF00E676),
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Terms of Service'),
+                        content: const SingleChildScrollView(
+                          child: Text(
+                            'By using this app, you agree to:\n\n'
+                            '• Provide accurate information\n'
+                            '• Keep your account secure\n'
+                            '• Use the app responsibly\n'
+                            '• Comply with local laws\n\n'
+                            'We reserve the right to suspend accounts that violate these terms.\n\n'
+                            'Last updated: December 2024',
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
                 _SettingsTile(
                   icon: Icons.apps,
@@ -217,6 +349,51 @@ class SettingsScreen extends StatelessWidget {
                   subtitle: 'v2.4.0',
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Developer Tools Section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'Developer',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  // Test Data Generator temporarily disabled
+                  /*
+                  _SettingsTile(
+                    icon: Icons.science,
+                    title: 'Test Data Generator',
+                    iconColor: Colors.purple,
+                    subtitle: 'Create sample data for testing',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TestDataScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  */
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 24),
@@ -327,6 +504,298 @@ class _SettingsTile extends StatelessWidget {
               ? const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey)
               : null),
       onTap: onTap,
+    );
+  }
+}
+
+// Change Password Dialog
+class ChangePasswordDialog extends StatefulWidget {
+  const ChangePasswordDialog({super.key});
+
+  @override
+  State<ChangePasswordDialog> createState() => _ChangePasswordDialogState();
+}
+
+class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
+  final _currentPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _obscureCurrent = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
+
+  @override
+  void dispose() {
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Change Password'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _currentPasswordController,
+              obscureText: _obscureCurrent,
+              decoration: InputDecoration(
+                labelText: 'Current Password',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(_obscureCurrent ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () => setState(() => _obscureCurrent = !_obscureCurrent),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _newPasswordController,
+              obscureText: _obscureNew,
+              decoration: InputDecoration(
+                labelText: 'New Password',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(_obscureNew ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () => setState(() => _obscureNew = !_obscureNew),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _confirmPasswordController,
+              obscureText: _obscureConfirm,
+              decoration: InputDecoration(
+                labelText: 'Confirm New Password',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(_obscureConfirm ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (_newPasswordController.text == _confirmPasswordController.text &&
+                _newPasswordController.text.length >= 4) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Password changed successfully!'),
+                  backgroundColor: Color(0xFF00E676),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Passwords don\'t match or too short'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00E676),
+          ),
+          child: const Text('Change Password'),
+        ),
+      ],
+    );
+  }
+}
+
+// Biometric Switch Widget
+class BiometricSwitch extends StatefulWidget {
+  const BiometricSwitch({super.key});
+
+  @override
+  State<BiometricSwitch> createState() => _BiometricSwitchState();
+}
+
+class _BiometricSwitchState extends State<BiometricSwitch> {
+  bool _enabled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: _enabled,
+      onChanged: (value) {
+        setState(() => _enabled = value);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_enabled ? 'Biometric login enabled' : 'Biometric login disabled'),
+            backgroundColor: const Color(0xFF00E676),
+          ),
+        );
+      },
+      activeColor: const Color(0xFF00E676),
+    );
+  }
+}
+
+// Notifications Dialog
+class NotificationsDialog extends StatefulWidget {
+  const NotificationsDialog({super.key});
+
+  @override
+  State<NotificationsDialog> createState() => _NotificationsDialogState();
+}
+
+class _NotificationsDialogState extends State<NotificationsDialog> {
+  bool _pushNotifications = true;
+  bool _emailNotifications = true;
+  bool _smsNotifications = false;
+  bool _transactionAlerts = true;
+  bool _promotions = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Notification Settings'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SwitchListTile(
+              title: const Text('Push Notifications'),
+              subtitle: const Text('Receive notifications on your device'),
+              value: _pushNotifications,
+              onChanged: (value) => setState(() => _pushNotifications = value),
+              activeColor: const Color(0xFF00E676),
+            ),
+            SwitchListTile(
+              title: const Text('Email Notifications'),
+              subtitle: const Text('Receive updates via email'),
+              value: _emailNotifications,
+              onChanged: (value) => setState(() => _emailNotifications = value),
+              activeColor: const Color(0xFF00E676),
+            ),
+            SwitchListTile(
+              title: const Text('SMS Notifications'),
+              subtitle: const Text('Receive text messages'),
+              value: _smsNotifications,
+              onChanged: (value) => setState(() => _smsNotifications = value),
+              activeColor: const Color(0xFF00E676),
+            ),
+            const Divider(),
+            SwitchListTile(
+              title: const Text('Transaction Alerts'),
+              subtitle: const Text('Get notified of all transactions'),
+              value: _transactionAlerts,
+              onChanged: (value) => setState(() => _transactionAlerts = value),
+              activeColor: const Color(0xFF00E676),
+            ),
+            SwitchListTile(
+              title: const Text('Promotions'),
+              subtitle: const Text('Receive offers and promotions'),
+              value: _promotions,
+              onChanged: (value) => setState(() => _promotions = value),
+              activeColor: const Color(0xFF00E676),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Notification settings saved!'),
+                backgroundColor: Color(0xFF00E676),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00E676),
+          ),
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+}
+
+// Language Dialog
+class LanguageDialog extends StatefulWidget {
+  const LanguageDialog({super.key});
+
+  @override
+  State<LanguageDialog> createState() => _LanguageDialogState();
+}
+
+class _LanguageDialogState extends State<LanguageDialog> {
+  String _selectedLanguage = 'English';
+  
+  final List<Map<String, String>> _languages = [
+    {'code': 'en', 'name': 'English', 'flag': '🇺🇸'},
+    {'code': 'ar', 'name': 'العربية', 'flag': '🇪🇬'},
+    {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
+    {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
+    {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Language'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: _languages.map((lang) {
+            return RadioListTile<String>(
+              title: Row(
+                children: [
+                  Text(lang['flag']!, style: const TextStyle(fontSize: 24)),
+                  const SizedBox(width: 12),
+                  Text(lang['name']!),
+                ],
+              ),
+              value: lang['name']!,
+              groupValue: _selectedLanguage,
+              onChanged: (value) => setState(() => _selectedLanguage = value!),
+              activeColor: const Color(0xFF00E676),
+            );
+          }).toList(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Language changed to $_selectedLanguage'),
+                backgroundColor: const Color(0xFF00E676),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF00E676),
+          ),
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }
